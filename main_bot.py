@@ -130,7 +130,7 @@ async def 인증(ctx):
         return
 
     if msg.content == a:
-        role = discord.utils.get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
+        role = get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
         await nummsg.delete()
         await ctx.message.delete()
         await msg.delete()
