@@ -2,6 +2,7 @@ import os
 import discord
 import asyncio
 import random
+import sqlite3
 from discord.ext import commands
 from discord.utils import get
 from datetime import datetime
