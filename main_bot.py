@@ -60,7 +60,7 @@ async def 처벌(ctx, user: discord.Member, *, arg):
     embed.add_field(name='디스코드 id', value=f'{user.id}', inline=False)
     embed.add_field(name='사유', value=arg, inline=False)
     embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
-    embed.set_footer(icon_url=author1.avatar_url, text=f'{author}')
+    embed.set_footer(icon_url=author1.avatar.url, text=f'{author}')
     await user.ban(reason=arg)
     await channel.send("@everyone", embed=embed)
     pass
