@@ -3,14 +3,15 @@ import discord
 from discord.ext import commands
 import sqlite3
 
-
 intents = discord.Intents.default()
 intents.message_content = True 
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+# 토큰 환경 변수로 불러오기
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 
+# 데이터베이스 접속
 db = sqlite3.connect("database.db")
 SQL = db.cursor()
 

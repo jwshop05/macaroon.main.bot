@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
-TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+token = os.environ.get('DISCORD_BOT_TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True 
@@ -19,7 +19,7 @@ async def on_ready():
 async def _HumanRole(ctx, member: discord.Member = None):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = app.get_channel(1014428203554709513)
+    channel = app.get_channel(1014428203231752219)
     member = member or ctx.message.author
     role = get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
     if role:
