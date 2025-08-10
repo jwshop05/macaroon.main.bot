@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "main_bot.py", "main.py","verification_bot.py","verification_bot2.py", "warning_bot.py"]
+CMD ["python", "main_bot.py"]
