@@ -94,6 +94,9 @@ async def _notice(ctx):
     embed.set_footer(text=f"마카롱서버*")
     await channel.send("@here", embed=embed)
     msg1 = await ctx.send('시스템 결함 확인중')
+
+    await asyncio.sleep(8)
+
     msg2 = await ctx.send('발견된 결함 없음')
 
     await asyncio.sleep(8)
