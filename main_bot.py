@@ -42,10 +42,8 @@ async def _clear(ctx, amount=20):
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
     await ctx.channel.purge(limit=amount)
     msg3 = await ctx.send(f'{amount}개의 메세지 청소를 완료했어요.')
-    await asyncio.sleep(8)
-    
 
-    await message.delete()
+    await asyncio.sleep(8)
     
     await msg3.delete()
 
