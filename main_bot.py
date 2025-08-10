@@ -69,7 +69,7 @@ async def 처벌(ctx, user: discord.Member, *, arg):
 async def 공지(ctx, *, arg):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = client.get_channel(1014428203554709507)
+    channel = bot.get_channel(1014428203554709507)
     embed = discord.Embed(color=0xab19ae, timestamp=ctx.message.created_at, title="_마카롱_공지")
     embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
     embed.add_field(name="내용", value=arg, inline=True)
@@ -82,7 +82,7 @@ async def 공지(ctx, *, arg):
 async def 서버켜기(ctx):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = client.get_channel(1014428203554709508)
+    channel = bot.get_channel(1014428203554709508)
     embed = discord.Embed(color=0x12ff00, timestamp=datetime.utcnow(), title="서버 ON")
     embed.add_field(name="상태", value="**ON**", inline=True)
     embed.set_footer(text=f"마카롱서버*")
@@ -102,7 +102,7 @@ async def 서버켜기(ctx):
 async def 서버끄기(ctx, *, arg):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = client.get_channel(1014428203554709508)
+    channel = bot.get_channel(1014428203554709508)
     embed = discord.Embed(color=0xff0000, timestamp=datetime.utcnow(), title="서버 OFF")
     embed.add_field(name="상태", value="**OFF**", inline=False)
     embed.add_field(name="사유", value=arg, inline=False)
