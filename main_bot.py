@@ -41,13 +41,13 @@ async def _clear(ctx, amount=20):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
     await ctx.channel.purge(limit=amount)
-    await ctx.send(f'{amount}개의 메세지 청소를 완료했어요.')
-    await asyncio.sleep(3)
+    msg3 = await ctx.send(f'{amount}개의 메세지 청소를 완료했어요.')
+    await asyncio.sleep(8)
     
 
     await message.delete()
     
-    await ctx.message.delete()
+    await msg3.delete()
 
 @client.command(name='처벌')
 async def _ban(ctx, user: discord.Member, *, arg):
