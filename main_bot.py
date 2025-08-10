@@ -115,55 +115,95 @@ async def 서버끄기(ctx, *, arg):
 async def 인증(ctx):
     if ctx.channel.id != 1014428203231752217:
         return
-
     a = ""
     captcha_img = ImageCaptcha()
     for i in range(6):
         a += str(random.randint(0, 9))
     filename = f"{ctx.author.id}.png"
     captcha_img.write(a, filename)
-
     nummsg = await ctx.send(f"{ctx.author.mention} 아래 숫자를 10초 내에 입력해주세요.", file=discord.File(filename))
-
+    
     def check(msg):
         return msg.author == ctx.author and msg.channel == ctx.channel
-
+    
     try:
         msg = await bot.wait_for('message', timeout=10, check=check)
     except:
-        await nummsg.delete()
-        await ctx.message.delete()
+        try:
+            await nummsg.delete()
+        except:
+            pass
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+
         embed = discord.Embed(title='❌ 인증실패', color=0xFF0000)
         embed.add_field(name='닉네임', value=ctx.author.mention, inline=False)
         embed.add_field(name='이유', value='시간초과', inline=False)
-        await ctx.send(embed=embed)
+        msg_fail = await ctx.send(embed=embed)
+
+        await asyncio.sleep(18)
+        try:
+            await msg_fail.delete()
+        except:
+            pass
         return
 
     if msg.content == a:
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else "https://i.ibb.co/KzhQm5MS/123123123123.png"
         role = get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
-        await nummsg.delete()
-        await ctx.message.delete()
-        await msg.delete()
+        try:
+            await nummsg.delete()
+        except:
+            pass
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+        try:
+            await msg.delete()
+        except:
+            pass
+
         embed = discord.Embed(title='인증성공', color=0x04FF00)
         embed.add_field(name='닉네임', value=ctx.author.mention, inline=False)
         embed.add_field(name='3초 후 인증 역할 부여', value='** **', inline=False)
         embed.set_thumbnail(url=avatar_url)
-        await ctx.send(embed=embed)
-        await asyncio.sleep(3)
+        msg_success = await ctx.send(embed=embed)
+        await asyncio.sleep(18)
+        try:
+            await msg_success.delete()
+        except:
+            pass
         if role:
             await ctx.author.add_roles(role)
-        await msg.delete()
     else:
-        # 잘못 입력시 처리
-        await nummsg.delete()
-        await ctx.message.delete()
-        await msg.delete()
+
+        try:
+            await nummsg.delete()
+        except:
+            pass
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+        try:
+            await msg.delete()
+        except:
+            pass
+
         embed = discord.Embed(title='❌ 인증실패', color=0xFF0000)
         embed.add_field(name='닉네임', value=ctx.author.mention, inline=False)
         embed.add_field(name='이유', value='잘못된 숫자', inline=False)
-        await ctx.send(embed=embed)
+        msg_fail2 = await ctx.send(embed=embed)
+        await asyncio.sleep(18)
+        try:
+            await msg_fail2.delete()
+        except:
+            pass
 
+        
 @bot.command(name="수동인증")
 async def _HumanRole(ctx, member: discord.Member = None):
     if not ctx.author.guild_permissions.administrator:
