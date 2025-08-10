@@ -6,15 +6,19 @@ from discord.ext import commands
 from discord.utils import get
 from datetime import datetime
 from dotenv import load_dotenv
+import sqlite3
 
 load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
-client = commands.Bot(command_prefix='!')
 
-connection = sqlite3.connect("datebase.db")
+intents = discord.Intents.default()
+intents.message_content = True 
+
+client = commands.Bot(command_prefix='!', intents=intents)
+
+connection = sqlite3.connect("database.db")
 cur = connection.cursor()
-
 async def status_task():
     while(True):
         types = "1","2","3","4"

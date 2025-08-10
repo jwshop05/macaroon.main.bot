@@ -4,9 +4,10 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
-token = os.environ.get('DISCORD_BOT_TOKEN')  # 환경변수에서 토큰 읽기
+intents = discord.Intents.default()
+intents.message_content = True 
 
-app = commands.Bot(command_prefix='!')
+app = commands.Bot(command_prefix='!', intents=intents)
 
 @app.event
 async def on_ready():

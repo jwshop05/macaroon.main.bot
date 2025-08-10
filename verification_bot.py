@@ -3,15 +3,16 @@ import discord
 from captcha.image import ImageCaptcha
 import random
 import asyncio
+from discord.ext import commands
 
-token = os.environ.get('DISCORD_BOT_TOKEN')
-_channel = '894927547798798366'
+intents = discord.Intents.default()
+intents.message_content = True
 
-client = discord.Client()
+client = commands.Bot(command_prefix='!', intents=intents)
 
 @client.event
 async def on_ready():
-    print(client.user)
+    print(f'{client.user}으로 로그인 완료')
 
 @client.event
 async def on_message(message):
@@ -66,4 +67,4 @@ async def on_message(message):
             await message.channel.send(embed=tlfvoEmbed)
             print(f'{message.author} 님이 잘못된 숫자로 인증 실패')
 
-client.run(token)
+client.run(os.environ.get('DISCORD_BOT_TOKEN'))
