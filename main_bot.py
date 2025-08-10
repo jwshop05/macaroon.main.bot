@@ -53,7 +53,7 @@ async def 처벌(ctx, user: discord.Member, *, arg):
     
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = client.get_channel(1014428204020269071)
+    channel = bot.get_channel(1014428204020269071)
     embed = discord.Embed(title="🚨〔 마카롱 〕서버 차단", color=0xff0000)
     embed.add_field(name='디스코드 멘션', value=f'<@{user.id}>, {user}', inline=False)
     embed.add_field(name='디스코드 별명', value=f'{user.display_name}', inline=False)
