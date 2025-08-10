@@ -89,13 +89,14 @@ async def _notice(ctx):
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
     channel = client.get_channel(1014428203554709508)
     embed = discord.Embed(color=0x12ff00, timestamp=datetime.utcnow(), title="서버 ON")
+    embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
     embed.add_field(name="상태", value="**ON**", inline=True)
     embed.set_footer(text=f"마카롱서버*")
     await channel.send("@here", embed=embed)
     msg1 = await ctx.send('시스템 결함 확인중')
     msg2 = await ctx.send('발견된 결함 없음')
 
-    await asyncio.sleep(2)
+    await asyncio.sleep(8)
 
     await msg1.delete()
     await msg2.delete()
@@ -108,6 +109,7 @@ async def _notice(ctx,*, arg):
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
     channel = client.get_channel(1014428203554709508)
     embed = discord.Embed(color=0xff0000, timestamp=datetime.utcnow(), title="서버 OFF")
+    embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
     embed.add_field(name="상태", value="**OFF**", inline=False)
     embed.add_field(name="사유", value=arg, inline=False)
     embed.set_footer(text=f"마카롱서버")
