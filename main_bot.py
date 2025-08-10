@@ -15,6 +15,16 @@ TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 db = sqlite3.connect("database.db")
 SQL = db.cursor()
 
+SQL.execute('''
+CREATE TABLE IF NOT EXISTS warn (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_name TEXT,
+    user_id INTEGER UNIQUE,
+    warn INTEGER
+)
+''')
+db.commit()
+
 intents = discord.Intents.default()
 intents.message_content = True
 
