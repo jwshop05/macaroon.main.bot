@@ -13,6 +13,7 @@ import sqlite3
 load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+_channel = '1014428203231752217'
 
 intents = discord.Intents.default()
 intents.message_content = True 
