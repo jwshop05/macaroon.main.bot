@@ -1,4 +1,4 @@
-discord.py==2.0.0
-pillow==9.0.1
-python-dotenv==0.21.0
-captcha==1.0.4
+discord.py
+pillow
+python-dotenv
+captcha
