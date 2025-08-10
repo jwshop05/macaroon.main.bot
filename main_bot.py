@@ -6,6 +6,7 @@ import asyncio
 import sqlite3
 from discord.utils import get
 from datetime import datetime
+from captcha.image import ImageCaptcha
 from dotenv import load_dotenv
 load_dotenv()
 
