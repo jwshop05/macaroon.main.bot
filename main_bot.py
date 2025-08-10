@@ -258,5 +258,19 @@ async def 경고확인(ctx, user: discord.Member):
         warn1 = SQL.fetchall()[0]
         await ctx.send(f'어라..그 사람은 경고가 {warn1[0]}회가 있어요... ')
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def 경고초기화(ctx, user: discord.Member = None):
+    if user is None:
+        # 서버 전체 유저 경고 지우기
+        SQL.execute('DELETE FROM warn')
+        db.commit()
+        await ctx.send("모든 사용자 경고 기록을 초기화했습니다.")
+    else:
+        USER_ID = user.id
+        SQL.execute('DELETE FROM warn WHERE user_id=?', (USER_ID,))
+        db.commit()
+        await ctx.send(f"{user.mention}님의 경고 기록을 초기화했습니다.")
+
 
 bot.run(os.environ.get('DISCORD_BOT_TOKEN'))
