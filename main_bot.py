@@ -130,6 +130,7 @@ async def 인증(ctx):
         return
 
     if msg.content == a:
+        avatar_url = ctx.author.avatar.url if ctx.author.avatar else "https://i.ibb.co/KzhQm5MS/123123123123.png"
         role = get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
         await nummsg.delete()
         await ctx.message.delete()
@@ -137,12 +138,14 @@ async def 인증(ctx):
         embed = discord.Embed(title='인증성공', color=0x04FF00)
         embed.add_field(name='닉네임', value=ctx.author.mention, inline=False)
         embed.add_field(name='3초 후 인증 역할 부여', value='** **', inline=False)
-        embed.set_thumbnail(url=ctx.author.avatar.url)
+        embed.set_thumbnail(url=avatar_url)
         await ctx.send(embed=embed)
         await asyncio.sleep(3)
-        await ctx.author.add_roles(role)
+        if role:
+            await ctx.author.add_roles(role)
         await msg.delete()
     else:
+        # 잘못 입력시 처리
         await nummsg.delete()
         await ctx.message.delete()
         await msg.delete()
