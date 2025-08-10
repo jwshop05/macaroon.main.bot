@@ -38,19 +38,6 @@ async def on_ready():
     print('마카롱_메인봇으로_로그인_완료')
     await client.loop.create_task(status_task())
 
-@client.command(name='청소')
-async def _clear(ctx, amount=20):
-    if not ctx.author.guild_permissions.administrator:
-        return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    await ctx.channel.purge(limit=amount)
-    await ctx.send(f'{amount}개의 메세지 청소를 완료했어요.')
-    await asyncio.sleep(3)
-    
-
-    await message.delete()
-    
-    await ctx.message.delete()
-
 @client.event
 async def on_message(message):
     if message.content.startswith("!인증"):  # 명령어 !인증
@@ -103,6 +90,20 @@ async def on_message(message):
             tlfvoEmbed.add_field(name='이유', value='잘못된 숫자', inline=False)
             await message.channel.send(embed=tlfvoEmbed)
             print(f'{message.author} 님이 잘못된 숫자로 인증 실패')
+
+
+@client.command(name='청소')
+async def _clear(ctx, amount=20):
+    if not ctx.author.guild_permissions.administrator:
+        return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
+    await ctx.channel.purge(limit=amount)
+    await ctx.send(f'{amount}개의 메세지 청소를 완료했어요.')
+    await asyncio.sleep(3)
+    
+
+    await message.delete()
+    
+    await ctx.message.delete()
 
 @client.command(name='처벌')
 async def _ban(ctx, user: discord.Member, *, arg):
