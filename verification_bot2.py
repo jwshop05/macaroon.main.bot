@@ -4,11 +4,12 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
+TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+
 intents = discord.Intents.default()
 intents.message_content = True 
 
 app = commands.Bot(command_prefix='!', intents=intents)
-TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 
 @app.event
 async def on_ready():
