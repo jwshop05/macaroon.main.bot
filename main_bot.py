@@ -26,13 +26,47 @@ CREATE TABLE IF NOT EXISTS warn (
 db.commit()
 
 intents = discord.Intents.default()
+intents.voice_states = True
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+CHANNEL_A_ID = 1404444264775290910
+CHANNEL_B_ID = 1017537139484934214
+
 @bot.event
 async def on_ready():
     print('봇이 준비되었습니다!')
+
+@bot.event
+async def on_voice_state_update(member, before, after):
+    if after.channel and before.channel != after.channel:
+        if after.channel.id == CHANNEL_A_ID:
+            await handle_channel_a(member, after.channel)
+        elif after.channel.id == CHANNEL_B_ID:
+            await handle_channel_b(member, after.channel)
+
+async def handle_channel_a(member, channel):
+    guild = member.guild
+    category = channel.category
+
+    new_channel = await guild.create_voice_channel(
+        name=f'{member.name}의 채널 ',
+        category=category
+    )
+
+    await member.move_to(new_channel)
+
+async def handle_channel_b(member, channel):
+    guild = member.guild
+    category = channel.category
+
+    new_channel = await guild.create_voice_channel(
+        name=f'{member.name}의 채널 ',
+        category=category
+    )
+
+    await member.move_to(new_channel)
 
 @bot.command()
 async def 청소(ctx, amount=20):
