@@ -12,8 +12,8 @@ load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 IDLE_CHANNEL_ID = 1404443419308462101
-IDLE_TIMEOUT = 10
-DELETE_TIMEOUT = 20
+IDLE_TIMEOUT = 6000
+DELETE_TIMEOUT = 10
 
 db = sqlite3.connect("database.db")
 SQL = db.cursor()
@@ -113,7 +113,6 @@ async def check_idle(member, channel):
         if idle_channel:
             try:
                 await member.move_to(idle_channel)
-                await member.edit(mute=True)
                 print(f'{member.name}님이 {idle_channel.name} 채널로 이동하고 뮤트되었습니다.')
             except Exception as e:
                 print(f"이동 및 뮤트 오류: {e}")
