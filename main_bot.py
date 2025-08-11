@@ -1,6 +1,6 @@
 import os
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import random
 import asyncio
 import sqlite3
@@ -11,6 +11,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+IDLE_CHANNEL_ID = 1404443419308462101
+IDLE_TIMEOUT = 10
+DELETE_TIMEOUT = 20
 
 db = sqlite3.connect("database.db")
 SQL = db.cursor()
@@ -31,6 +34,8 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+activity_timers = {}  
+
 CHANNEL_A_ID = 1404444264775290910
 CHANNEL_B_ID = 1017537139484934214
 
@@ -38,6 +43,50 @@ CHANNEL_B_ID = 1017537139484934214
 async def on_ready():
     print('봇이 준비되었습니다!')
 
+@bot.event
+async def on_voice_state_update(member, before, after):
+    if after.channel:
+        reset_activity_timer(member)
+    elif before.channel and len(before.channel.members) == 0:
+        start_delete_timer(before.channel)
+
+@bot.event
+async def on_message(message):
+    if message.author.voice:
+        reset_activity_timer(message.author)
+    await bot.process_commands(message)
+
+def reset_activity_timer(member):
+    if member.id in activity_timers:
+        activity_timers[member.id].cancel()
+    activity_timers[member.id] = check_idle.apply_async(args=[member.id], countdown=IDLE_TIMEOUT)
+
+def start_delete_timer(channel):
+    if channel.id not in channel_timers:
+        channel_timers[channel.id] = delete_channel.apply_async(args=[channel.id], countdown=DELETE_TIMEOUT)
+        print(f'{channel.name} 채널 삭제 타이머 시작 ({DELETE_TIMEOUT}초)')
+
+@tasks.loop(seconds=IDLE_TIMEOUT)
+async def check_idle(member_id):
+    member = bot.guild.get_member(member_id)
+    if member and member.voice:
+        channel = member.voice.channel
+        if channel:
+            idle_channel = bot.get_channel(IDLE_CHANNEL_ID)
+            await member.move_to(idle_channel)
+            await member.edit(mute=True)
+            print(f'{member.name}님이 {idle_channel.name} 채널로 이동하고 뮤트되었습니다.')
+            start_delete_timer(channel)
+    del activity_timers[member_id]  
+
+@tasks.loop(seconds=DELETE_TIMEOUT)
+async def delete_channel(channel_id):
+    channel = bot.get_channel(channel_id)
+    if channel:
+        await channel.delete()
+        print(f'{channel.name} 채널 삭제됨')
+    if channel_id in channel_timers:
+        del channel_timers[channel_id]
 @bot.event
 async def on_voice_state_update(member, before, after):
     if after.channel and before.channel != after.channel:
