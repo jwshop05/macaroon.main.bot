@@ -41,6 +41,28 @@ channel_timers = {}
 CHANNEL_A_ID = 1404444264775290910
 CHANNEL_B_ID = 1017537139484934214
 
+async def handle_channel_a(member, channel):
+    guild = member.guild
+    category = channel.category
+
+    new_channel = await guild.create_voice_channel(
+        name=f'{member.name}의 채널 ',
+        category=category
+    )
+
+    await member.move_to(new_channel)
+
+async def handle_channel_b(member, channel):
+    guild = member.guild
+    category = channel.category
+
+    new_channel = await guild.create_voice_channel(
+        name=f'{member.name}의 채널 ',
+        category=category
+    )
+
+    await member.move_to(new_channel)
+
 @bot.event
 async def on_ready():
     print('봇이 준비되었습니다!')
