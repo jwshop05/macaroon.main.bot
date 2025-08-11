@@ -78,6 +78,16 @@ async def on_voice_state_update(member, before, after):
         start_delete_timer(before.channel)
 
 @bot.event
+async def on_voice_state_update(member, before, after):
+    if after.channel and before.channel != after.channel:
+        if after.channel.id == CHANNEL_A_ID:
+            await handle_channel_a(member, after.channel)
+        elif after.channel.id == CHANNEL_B_ID:
+            await handle_channel_b(member, after.channel)
+    elif before.channel and len(before.channel.members) == 0:
+        start_delete_timer(before.channel)
+
+@bot.event
 async def on_message(message):
     if message.author.voice and message.author.voice.channel:
         reset_activity_timer(message.author, message.author.voice.channel)
@@ -88,6 +98,7 @@ def reset_activity_timer(member, channel):
         activity_timers[member.id].cancel()
     task = asyncio.create_task(check_idle(member, channel))
     activity_timers[member.id] = task
+    print(f'{member.name}님의 새 타이머 시작 ({IDLE_TIMEOUT}초)')
 
 def start_delete_timer(channel):
     if channel.id not in channel_timers:
@@ -107,6 +118,8 @@ async def check_idle(member, channel):
             except Exception as e:
                 print(f"이동 및 뮤트 오류: {e}")
             start_delete_timer(channel)
+        else:
+            print(f"IDLE_CHANNEL_ID({IDLE_CHANNEL_ID})에 해당하는 채널을 찾을 수 없습니다.")
     del activity_timers[member.id]
 
 async def delete_channel(channel):
