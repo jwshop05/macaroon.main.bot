@@ -38,7 +38,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 activity_timers = {}  
 channel_timers = {}
 
-CHANNEL_A_ID = 1404444264775290910
+CHANNEL_A_ID = 1404454103643324577
 CHANNEL_B_ID = 1017537139484934214
 
 async def handle_channel_a(member, channel):
