@@ -36,6 +36,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 activity_timers = {}  
+channel_timers = {}
 
 CHANNEL_A_ID = 1404444264775290910
 CHANNEL_B_ID = 1017537139484934214
@@ -46,77 +47,55 @@ async def on_ready():
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    if after.channel:
-        reset_activity_timer(member)
-    elif before.channel and len(before.channel.members) == 0:
-        start_delete_timer(before.channel)
-
-@bot.event
-async def on_message(message):
-    if message.author.voice:
-        reset_activity_timer(message.author)
-    await bot.process_commands(message)
-
-def reset_activity_timer(member):
-    if member.id in activity_timers:
-        activity_timers[member.id].cancel()
-    activity_timers[member.id] = check_idle.apply_async(args=[member.id], countdown=IDLE_TIMEOUT)
-
-def start_delete_timer(channel):
-    if channel.id not in channel_timers:
-        channel_timers[channel.id] = delete_channel.apply_async(args=[channel.id], countdown=DELETE_TIMEOUT)
-        print(f'{channel.name} 채널 삭제 타이머 시작 ({DELETE_TIMEOUT}초)')
-
-@tasks.loop(seconds=IDLE_TIMEOUT)
-async def check_idle(member_id):
-    member = bot.guild.get_member(member_id)
-    if member and member.voice:
-        channel = member.voice.channel
-        if channel:
-            idle_channel = bot.get_channel(IDLE_CHANNEL_ID)
-            await member.move_to(idle_channel)
-            await member.edit(mute=True)
-            print(f'{member.name}님이 {idle_channel.name} 채널로 이동하고 뮤트되었습니다.')
-            start_delete_timer(channel)
-    del activity_timers[member_id]  
-
-@tasks.loop(seconds=DELETE_TIMEOUT)
-async def delete_channel(channel_id):
-    channel = bot.get_channel(channel_id)
-    if channel:
-        await channel.delete()
-        print(f'{channel.name} 채널 삭제됨')
-    if channel_id in channel_timers:
-        del channel_timers[channel_id]
-@bot.event
-async def on_voice_state_update(member, before, after):
     if after.channel and before.channel != after.channel:
         if after.channel.id == CHANNEL_A_ID:
             await handle_channel_a(member, after.channel)
         elif after.channel.id == CHANNEL_B_ID:
             await handle_channel_b(member, after.channel)
+    elif before.channel and len(before.channel.members) == 0:
+        start_delete_timer(before.channel)
 
-async def handle_channel_a(member, channel):
-    guild = member.guild
-    category = channel.category
+@bot.event
+async def on_message(message):
+    if message.author.voice and message.author.voice.channel:
+        reset_activity_timer(message.author, message.author.voice.channel)
+    await bot.process_commands(message)
 
-    new_channel = await guild.create_voice_channel(
-        name=f'{member.name}의 채널 ',
-        category=category
-    )
+def reset_activity_timer(member, channel):
+    if member.id in activity_timers:
+        activity_timers[member.id].cancel()
+    task = asyncio.create_task(check_idle(member, channel))
+    activity_timers[member.id] = task
 
-    await member.move_to(new_channel)
+def start_delete_timer(channel):
+    if channel.id not in channel_timers:
+        task = asyncio.create_task(delete_channel(channel))
+        channel_timers[channel.id] = task
+        print(f'{channel.name} 채널 삭제 타이머 시작 ({DELETE_TIMEOUT}초)')
 
-async def handle_channel_b(member, channel):
-    guild = member.guild
-    category = channel.category
+async def check_idle(member, channel):
+    await asyncio.sleep(IDLE_TIMEOUT)
+    if member.voice and member.voice.channel == channel:
+        idle_channel = bot.get_channel(IDLE_CHANNEL_ID)
+        if idle_channel:
+            try:
+                await member.move_to(idle_channel)
+                await member.edit(mute=True)
+                print(f'{member.name}님이 {idle_channel.name} 채널로 이동하고 뮤트되었습니다.')
+            except Exception as e:
+                print(f"이동 및 뮤트 오류: {e}")
+            start_delete_timer(channel)
+    del activity_timers[member.id]
 
-    new_channel = await guild.create_voice_channel(
-        name=f'{member.name}의 채널 ',
-        category=category
-    )
-
-    await member.move_to(new_channel)
+async def delete_channel(channel):
+    await asyncio.sleep(DELETE_TIMEOUT)
+    try:
+        await channel.delete()
+        print(f'{channel.name} 채널 삭제됨')
+    except Exception as e:
+        print(f"채널 삭제 오류: {e}")
+    if channel.id in channel_timers:
+        del channel_timers[channel.id]
 
 @bot.command()
 async def 청소(ctx, amount=20):
