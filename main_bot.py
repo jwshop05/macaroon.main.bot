@@ -4,6 +4,7 @@ from discord.ext import commands, tasks
 import random
 import asyncio
 import sqlite3
+import requests
 from discord.utils import get
 from datetime import datetime
 from captcha.image import ImageCaptcha
@@ -14,6 +15,11 @@ TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 IDLE_CHANNEL_ID = 1404443419308462101
 IDLE_TIMEOUT = 6000
 DELETE_TIMEOUT = 10
+CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))
+BJ_ID = os.getenv("BJ_ID", "qkrqjatn098")
+
+THUMB_URL = f"https://liveimg.sooplive.co.kr/{BJ_ID}_thumb.jpg"
+is_live = False
 
 db = sqlite3.connect("database.db")
 SQL = db.cursor()
@@ -62,6 +68,46 @@ async def handle_channel_b(member, channel):
     )
 
     await member.move_to(new_channel)
+
+
+async def check_streaming():
+    global is_live
+    await bot.wait_until_ready()
+    channel = bot.get_channel(CHANNEL_ID)
+
+    while not bot.is_closed():
+        try:
+            res = requests.get(THUMB_URL)
+
+            # 방송 켜짐
+            if res.status_code == 200 and not is_live:
+                is_live = True
+                embed = discord.Embed(
+                    title="🔴 방송 시작!",
+                    description=f"[시청하기](https://ch.sooplive.co.kr/{BJ_ID})",
+                    color=discord.Color.red()
+                )
+                embed.set_image(url=THUMB_URL)
+                await channel.send(embed=embed)
+
+            # 방송 꺼짐
+            elif res.status_code != 200 and is_live:
+                is_live = False
+                embed = discord.Embed(
+                    title="📴 방송 종료",
+                    description="방송이 종료되었습니다.",
+                    color=discord.Color.dark_gray()
+                )
+                await channel.send(embed=embed)
+
+        except Exception as e:
+            print("Error:", e)
+
+        await asyncio.sleep(60)  # 1분마다 체크
+
+@bot.event
+async def on_ready():
+    print(f"✅ 로그인 완료: {bot.user}")
 
 @bot.event
 async def on_ready():
