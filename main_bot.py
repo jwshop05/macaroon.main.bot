@@ -188,7 +188,6 @@ async def 청소(ctx, amount=20):
 
 @bot.command()
 async def 처벌(ctx, user: discord.Member, *, arg):
-        
     author = ctx.message.author.display_name
     author1 = ctx.message.author
     USER_NAME = str(ctx.message.author)
@@ -196,7 +195,9 @@ async def 처벌(ctx, user: discord.Member, *, arg):
     
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
+
     channel = bot.get_channel(1014428204020269071)
+
     embed = discord.Embed(title="🚨〔 마카롱 〕서버 차단", color=0xff0000)
     embed.add_field(name='디스코드 멘션', value=f'<@{user.id}>, {user}', inline=False)
     embed.add_field(name='디스코드 별명', value=f'{user.display_name}', inline=False)
@@ -204,9 +205,25 @@ async def 처벌(ctx, user: discord.Member, *, arg):
     embed.add_field(name='사유', value=arg, inline=False)
     embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
     embed.set_footer(icon_url=author1.avatar.url, text=f'{author}')
+
+    try:
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        dm_embed = discord.Embed(
+            title="🚫 서버 차단 안내",
+            description=f"당신은 **{ctx.guild.name}** 서버에서 차단되었습니다.",
+            color=0xff0000
+        )
+        dm_embed.add_field(name="사유", value=arg, inline=False)
+        dm_embed.add_field(name="관리자", value=f"{author} ({author1})", inline=False)
+        dm_embed.add_field(name="차단 일시", value=now, inline=False)
+        dm_embed.set_footer(text=f"서버: {ctx.guild.name}")
+        await user.send(embed=dm_embed)
+    except:
+        await ctx.send(f"{user}님은 DM을 받을 수 없습니다.")
+
     await user.ban(reason=arg)
     await channel.send("@everyone", embed=embed)
-    pass
 
 @bot.command()
 async def 공지(ctx, *, arg):
