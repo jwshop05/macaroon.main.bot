@@ -11,12 +11,20 @@ from captcha.image import ImageCaptcha
 from dotenv import load_dotenv
 load_dotenv()
 
-TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
-IDLE_CHANNEL_ID = 1404443419308462101
+TOKEN = os.environ.get('DISCORD_BOT_TOKEN') #토큰
+IDLE_CHANNEL_ID = int(os.getenv("IDLE_CHANNEL_ID")) #뮤트
+CHANNEL_ID1 = int(os.getenv("CHANNEL_IDA")) #방송
+CHANNEL_ID2 = int(os.getenv("CHANNEL_ID2")) #차단
+CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3")) #공지
+CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4")) #서버
+CHANNEL_ID5 = int(os.getenv("CHANNEL_ID5")) #수동인증
+CHANNEL_ID6 = int(os.getenv("CHANNEL_ID6")) #경고
+VERIFY_CHANNEL_ID = cfg["verify_channel_id"] #인증
 IDLE_TIMEOUT = 6000
 DELETE_TIMEOUT = 10
 CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))
 BJ_ID = os.getenv("BJ_ID", "qkrqjatn098")
+
 
 THUMB_URL = f"https://liveimg.sooplive.co.kr/{BJ_ID}_thumb.jpg"
 is_live = False
@@ -44,8 +52,8 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 activity_timers = {}  
 channel_timers = {}
 
-CHANNEL_A_ID = 1404454103643324577
-CHANNEL_B_ID = 1017537139484934214
+CHANNEL_A_ID = int(os.getenv("CHANNEL_A_ID"))
+CHANNEL_B_ID = int(os.getenv("CHANNEL_B_ID"))
 
 async def handle_channel_a(member, channel):
     guild = member.guild
@@ -73,7 +81,7 @@ async def handle_channel_b(member, channel):
 async def check_streaming():
     global is_live
     await bot.wait_until_ready()
-    channel = bot.get_channel(CHANNEL_ID)
+    channel = bot.get_channel(CHANNEL_ID1)
 
     while not bot.is_closed():
         try:
@@ -103,7 +111,7 @@ async def check_streaming():
         except Exception as e:
             print("Error:", e)
 
-        await asyncio.sleep(60)  # 1분마다 체크
+        await asyncio.sleep(60)
 
 @bot.event
 async def on_ready():
@@ -196,7 +204,7 @@ async def 처벌(ctx, user: discord.Member, *, arg):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
 
-    channel = bot.get_channel(1014428204020269071)
+    channel = bot.get_channel(CHANNEL_ID2)
 
     embed = discord.Embed(title="🚨〔 마카롱 〕서버 차단", color=0xff0000)
     embed.add_field(name='디스코드 멘션', value=f'<@{user.id}>, {user}', inline=False)
@@ -229,7 +237,7 @@ async def 처벌(ctx, user: discord.Member, *, arg):
 async def 공지(ctx, *, arg):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = bot.get_channel(1014428203554709507)
+    channel = bot.get_channel(CHANNEL_ID3)
     embed = discord.Embed(color=0xab19ae, timestamp=ctx.message.created_at, title="_마카롱_공지")
     embed.set_thumbnail(url="https://i.ibb.co/KzhQm5MS/123123123123.png")
     embed.add_field(name="내용", value=arg, inline=True)
@@ -242,7 +250,7 @@ async def 공지(ctx, *, arg):
 async def 서버켜기(ctx):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = bot.get_channel(1014428203554709508)
+    channel = bot.get_channel(CHANNEL_ID4)
     embed = discord.Embed(color=0x12ff00, timestamp=datetime.utcnow(), title="서버 ON")
     embed.add_field(name="상태", value="**ON**", inline=True)
     embed.set_footer(text=f"마카롱서버*")
@@ -262,7 +270,7 @@ async def 서버켜기(ctx):
 async def 서버끄기(ctx, *, arg):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = bot.get_channel(1014428203554709508)
+    channel = bot.get_channel(CHANNEL_ID4)
     embed = discord.Embed(color=0xff0000, timestamp=datetime.utcnow(), title="서버 OFF")
     embed.add_field(name="상태", value="**OFF**", inline=False)
     embed.add_field(name="사유", value=arg, inline=False)
@@ -273,7 +281,7 @@ async def 서버끄기(ctx, *, arg):
 
 @bot.command()
 async def 인증(ctx):
-    if ctx.channel.id != 1014428203231752217:
+    if ctx.channel.id != VERIFY_CHANNEL_ID:
         return
     a = ""
     captcha_img = ImageCaptcha()
@@ -368,7 +376,7 @@ async def 인증(ctx):
 async def _HumanRole(ctx, member: discord.Member = None):
     if not ctx.author.guild_permissions.administrator:
         return await ctx.send(f'{ctx.author.mention}, 당신은 권한이 없습니다.')
-    channel = bot.get_channel(1014428203231752219)  # 채널 ID 수정
+    channel = bot.get_channel(CHANNEL_ID5)  # 채널 ID 수정
     member = member or ctx.message.author
     role = get(ctx.guild.roles, name="*꧁༺친구༻꧂*")
     if role:
@@ -380,9 +388,8 @@ async def _HumanRole(ctx, member: discord.Member = None):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def 경고(ctx, user: discord.Member, *, arg):
-    ch = bot.get_channel(1014428204020269072)
-    chs = bot.get_channel(1014428204020269071)
-
+    ch = bot.get_channel(CHANNEL_ID6)
+    chs = bot.get_channel(CHANNEL_ID2)
     author = ctx.message.author.display_name
     USER_ID = user.id
     SQL.execute(f'select user_id from warn where user_id="{USER_ID}"')
