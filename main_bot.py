@@ -81,7 +81,7 @@ async def handle_channel_b(member, channel):
 async def check_streaming():
     global is_live
     await bot.wait_until_ready()
-    channel = bot.get_channel(CHANNEL_ID1)
+    channel = bot.get_channel(CHANNEL_ID)
 
     while not bot.is_closed():
         try:
