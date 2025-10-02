@@ -19,7 +19,7 @@ CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3", 0)) #공지
 CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4", 0)) #서버
 CHANNEL_ID5 = int(os.getenv("CHANNEL_ID5", 0)) #수동인증
 CHANNEL_ID6 = int(os.getenv("CHANNEL_ID6", 0)) #경고
-VERIFY_CHANNEL_ID = int(os.getenv("VERIFY_CHANNEL_ID", 0))
+VERIFY_CHANNEL_ID = int(os.getenv("VERIFY_CHANNEL_ID", 0)) #인증
 # cfg["verify_channel_id"]
 IDLE_TIMEOUT = 6000
 DELETE_TIMEOUT = 10
@@ -53,8 +53,8 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 activity_timers = {}  
 channel_timers = {}
 
-CHANNEL_A_ID = int(os.getenv("CHANNEL_A_ID"))
-CHANNEL_B_ID = int(os.getenv("CHANNEL_B_ID"))
+CHANNEL_A_ID = int(os.getenv("CHANNEL_A_ID", 0))
+CHANNEL_B_ID = int(os.getenv("CHANNEL_B_ID", 0))
 
 async def handle_channel_a(member, channel):
     guild = member.guild
