@@ -19,7 +19,8 @@ CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3", 0)) #공지
 CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4", 0)) #서버
 CHANNEL_ID5 = int(os.getenv("CHANNEL_ID5", 0)) #수동인증
 CHANNEL_ID6 = int(os.getenv("CHANNEL_ID6", 0)) #경고
-VERIFY_CHANNEL_ID = cfg["verify_channel_id"] #인증
+VERIFY_CHANNEL_ID = int(os.getenv("VERIFY_CHANNEL_ID", 0))
+# cfg["verify_channel_id"]
 IDLE_TIMEOUT = 6000
 DELETE_TIMEOUT = 10
 CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))
