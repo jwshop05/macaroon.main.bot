@@ -13,12 +13,12 @@ load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN') #토큰
 IDLE_CHANNEL_ID = int(os.getenv("IDLE_CHANNEL_ID", 0)) #뮤트
-CHANNEL_ID1 = int(os.getenv("CHANNEL_ID1")) #방송
-CHANNEL_ID2 = int(os.getenv("CHANNEL_ID2")) #차단
-CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3")) #공지
-CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4")) #서버
-CHANNEL_ID5 = int(os.getenv("CHANNEL_ID5")) #수동인증
-CHANNEL_ID6 = int(os.getenv("CHANNEL_ID6")) #경고
+CHANNEL_ID1 = int(os.getenv("CHANNEL_ID1", 0)) #방송
+CHANNEL_ID2 = int(os.getenv("CHANNEL_ID2", 0)) #차단
+CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3", 0)) #공지
+CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4", 0)) #서버
+CHANNEL_ID5 = int(os.getenv("CHANNEL_ID5", 0)) #수동인증
+CHANNEL_ID6 = int(os.getenv("CHANNEL_ID6", 0)) #경고
 VERIFY_CHANNEL_ID = cfg["verify_channel_id"] #인증
 IDLE_TIMEOUT = 6000
 DELETE_TIMEOUT = 10
