@@ -13,7 +13,7 @@ load_dotenv()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN') #토큰
 IDLE_CHANNEL_ID = int(os.getenv("IDLE_CHANNEL_ID", 0)) #뮤트
-CHANNEL_ID1 = int(os.getenv("CHANNEL_IDA")) #방송
+CHANNEL_ID1 = int(os.getenv("CHANNEL_ID1")) #방송
 CHANNEL_ID2 = int(os.getenv("CHANNEL_ID2")) #차단
 CHANNEL_ID3 = int(os.getenv("CHANNEL_ID3")) #공지
 CHANNEL_ID4 = int(os.getenv("CHANNEL_ID4")) #서버
