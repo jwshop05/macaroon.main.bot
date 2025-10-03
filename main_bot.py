@@ -114,6 +114,19 @@ async def check_streaming():
 
         await asyncio.sleep(60)
 
+async def status_task():
+    while(True):
+        types = "1","2","3","4"
+        choice = random.choice(types)
+        if choice == "2":
+            await client.change_presence(activity=discord.Activity(type=1, name="〔 마카롱서버 관리중 〕", url='https://twitch.tv/twitch'))
+        elif choice == "3":
+            await client.change_presence(activity=discord.Activity(type=1, name="Made by 거프", url='https://twitch.tv/twitch'))
+        else:
+            await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="〔 마카롱서버 관리중 〕"))
+        await asyncio.sleep(15)
+
+
 @bot.event
 async def on_ready():
     print(f"✅ 로그인 완료: {bot.user}")
